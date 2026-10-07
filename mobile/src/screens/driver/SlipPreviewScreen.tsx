@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { showAlert } from '../../utils/alert';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -51,7 +52,7 @@ export default function SlipPreviewScreen({ route }: NavProps): React.JSX.Elemen
         setRotation(next);
       }
     } catch {
-      Alert.alert('Rotation failed', 'The image could not be rotated. You can continue without rotating.');
+      showAlert('Rotation failed', 'The image could not be rotated. You can continue without rotating.');
     } finally {
       setRotating(false);
     }

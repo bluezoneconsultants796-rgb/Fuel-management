@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { apiRequest } from './api';
 import { DriverProfileInfo, SafeUser } from '../types/models';
@@ -28,11 +29,16 @@ export async function fetchMe(): Promise<MeResponse> {
 }
 
 export async function persistToken(token: string): Promise<void> {
+  if (Platform.OS === 'web') {
+    try { window.localStorage.setItem(TOKEN_KEY, token); } catch { /* storage blocked */ }
+    return;
+  }
   await SecureStore.setItemAsync(TOKEN_KEY, token);
 }
 
 export async function loadStoredToken(): Promise<string | null> {
   try {
+    if (Platform.OS === 'web') return window.localStorage.getItem(TOKEN_KEY);
     return await SecureStore.getItemAsync(TOKEN_KEY);
   } catch {
     return null;
@@ -41,6 +47,10 @@ export async function loadStoredToken(): Promise<string | null> {
 
 export async function clearStoredToken(): Promise<void> {
   try {
+    if (Platform.OS === 'web') {
+      window.localStorage.removeItem(TOKEN_KEY);
+      return;
+    }
     await SecureStore.deleteItemAsync(TOKEN_KEY);
   } catch {
     // Ignore secure-store failures during logout.

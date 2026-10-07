@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Pressable,
   RefreshControl,
@@ -10,6 +9,7 @@ import {
   TextInput,
   View
 } from 'react-native';
+import { showAlert } from '../../utils/alert';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -128,7 +128,7 @@ export default function FuelRecordsScreen({ navigation, route }: Props): React.J
         setVehicles(vehicleList);
         setOptionsLoaded(true);
       } catch (err) {
-        Alert.alert(
+        showAlert(
           'Could not load filter options',
           getErrorMessage(err) + ' You can still filter by date, fuel type and status.'
         );

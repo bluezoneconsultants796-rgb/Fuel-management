@@ -6,14 +6,19 @@
     "orientation": "portrait",
     "scheme": "fleetfuel",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "splash": {
       "backgroundColor": "#1C3F60",
       "resizeMode": "contain"
     },
     "android": {
       "package": "com.fleet.fuelmanager",
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
     },
     "plugins": [
       [
@@ -23,6 +28,13 @@
         }
       ],
       "expo-document-picker"
-    ]
+    ],
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "experiments": {
+      "baseUrl": "/Fuel-management"
+    }
   }
 }

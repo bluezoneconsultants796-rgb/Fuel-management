@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -49,8 +50,13 @@ async function optimizeImage(picked: PickedFile, width?: number): Promise<Picked
       { compress: 0.85, format: ImageManipulator.SaveFormat.JPEG }
     );
     const base = picked.name.replace(/\.[^.]+$/, '');
-    const info = await FileSystem.getInfoAsync(result.uri).catch(() => null);
-    const size = info && info.exists ? info.size : 0;
+    let size = 0;
+    if (Platform.OS === 'web') {
+      size = (await (await fetch(result.uri)).blob()).size;
+    } else {
+      const info = await FileSystem.getInfoAsync(result.uri).catch(() => null);
+      size = info && info.exists ? info.size : 0;
+    }
     return { ...picked, uri: result.uri, name: `${base}.jpg`, mimeType: 'image/jpeg', size };
   } catch {
     return picked;
@@ -58,7 +64,8 @@ async function optimizeImage(picked: PickedFile, width?: number): Promise<Picked
 }
 
 export async function pickFromCamera(): Promise<PickedFile | null> {
-  const permission = await ImagePicker.requestCameraPermissionsAsync();
+  const permission =
+    Platform.OS === 'web' ? { granted: true } : await ImagePicker.requestCameraPermissionsAsync();
   if (!permission.granted) {
     throw new Error(
       'Camera permission is required to photograph slips. Please enable it in your phone settings.'
@@ -84,7 +91,8 @@ export async function pickFromCamera(): Promise<PickedFile | null> {
 }
 
 export async function pickFromGallery(): Promise<PickedFile | null> {
-  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const permission =
+    Platform.OS === 'web' ? { granted: true } : await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (!permission.granted) {
     throw new Error(
       'Gallery permission is required to pick a slip photo. Please enable it in your phone settings.'

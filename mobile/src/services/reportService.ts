@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { API_BASE_URL } from '../config';
@@ -33,6 +34,23 @@ export async function getMonthlyReport(filters: ReportFilters): Promise<MonthlyR
  */
 export async function downloadMonthlyReportPdf(filters: ReportFilters): Promise<string> {
   const token = getAuthToken();
+  if (Platform.OS === 'web') {
+    const response = await fetch(
+      `${API_BASE_URL}/api/reports/monthly/pdf?${buildQueryString(filters)}`,
+      { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+    );
+    if (!response.ok) {
+      let message = 'The report could not be generated. Please try again.';
+      try {
+        const parsed = (await response.json()) as { message?: string };
+        if (parsed.message) message = parsed.message;
+      } catch {
+        // Keep the default message.
+      }
+      throw new ApiError(message, response.status);
+    }
+    return URL.createObjectURL(await response.blob());
+  }
   const dir = `${FileSystem.cacheDirectory}reports`;
   try {
     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
@@ -79,6 +97,11 @@ export async function downloadMonthlyReportPdf(filters: ReportFilters): Promise<
  * user can Print, Save to Drive/Files, or send it via WhatsApp/Email.
  */
 export async function shareReportPdf(uri: string): Promise<void> {
+  if (Platform.OS === 'web') {
+    // Browser: open the PDF in a new tab (print / save from there).
+    window.open(uri, '_blank');
+    return;
+  }
   const available = await Sharing.isAvailableAsync();
   if (!available) {
     throw new ApiError(

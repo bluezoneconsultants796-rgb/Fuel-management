@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { API_BASE_URL } from '../config';
 import { ApiError, getAuthToken } from './api';
 import { OcrProcessResponse } from '../types/models';
@@ -22,11 +23,18 @@ export function processSlip(
 ): Promise<OcrProcessResponse> {
   return new Promise<OcrProcessResponse>((resolve, reject) => {
     const form = new FormData();
-    form.append('file', {
-      uri: file.uri,
-      name: file.name,
-      type: file.mimeType
-    } as unknown as Blob);
+    const attach = async (): Promise<void> => {
+      if (Platform.OS === 'web') {
+        const blob = await (await fetch(file.uri)).blob();
+        form.append('file', blob, file.name);
+      } else {
+        form.append('file', {
+          uri: file.uri,
+          name: file.name,
+          type: file.mimeType
+        } as unknown as Blob);
+      }
+    };
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', `${API_BASE_URL}/api/ocr/process`);
@@ -77,6 +85,8 @@ export function processSlip(
     };
 
     onPhase('uploading', 0);
-    xhr.send(form);
+    attach()
+      .then(() => xhr.send(form))
+      .catch(() => reject(new ApiError('The slip file could not be read. Please pick it again.', 0)));
   });
 }

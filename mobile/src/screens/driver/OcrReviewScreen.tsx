@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { showAlert } from '../../utils/alert';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen, ScreenHeader } from '../../components/Screen';
@@ -86,7 +87,7 @@ export default function OcrReviewScreen({ route, navigation }: Props): React.JSX
     const validationErrors = validateReviewForm(form);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      Alert.alert(
+      showAlert(
         'Please check the form',
         'Some fields are missing or invalid. Correct the highlighted fields and try again.'
       );
