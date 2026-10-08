@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { Screen } from '../components/Screen';
 import { TextField } from '../components/TextField';
 import { Button } from '../components/Button';
@@ -36,9 +35,11 @@ export default function LoginScreen(): React.JSX.Element {
   return (
     <Screen>
       <View style={styles.brand}>
-        <View style={styles.logo}>
-          <Ionicons name="speedometer-outline" size={34} color={colors.white} />
-        </View>
+        <Image
+          source={require('../../assets/logo-tile.png')}
+          style={styles.logo}
+          accessibilityLabel="Fleet Fuel Manager logo"
+        />
         <Text style={styles.appName}>Fleet Fuel Manager</Text>
         <Text style={styles.tagline}>Medicine Distribution Fleet</Text>
       </View>
@@ -82,12 +83,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xxl
   },
   logo: {
-    width: 76,
-    height: 76,
-    borderRadius: 24,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 92,
+    height: 92,
     marginBottom: spacing.lg
   },
   appName: {
