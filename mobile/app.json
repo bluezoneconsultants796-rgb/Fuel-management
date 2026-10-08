@@ -16,8 +16,9 @@
     "android": {
       "package": "com.fleet.fuelmanager",
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "plugins": [
@@ -35,6 +36,11 @@
     },
     "experiments": {
       "baseUrl": "/Fuel-management"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9eecde04-5503-428f-87a1-1f6b96003800"
+      }
     }
   }
 }
