@@ -16,10 +16,12 @@
     "android": {
       "package": "com.fleet.fuelmanager",
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
-      ]
+        "android.permission.CAMERA"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1C3F60"
+      }
     },
     "plugins": [
       [
@@ -41,6 +43,7 @@
       "eas": {
         "projectId": "9eecde04-5503-428f-87a1-1f6b96003800"
       }
-    }
+    },
+    "icon": "./assets/icon.png"
   }
 }

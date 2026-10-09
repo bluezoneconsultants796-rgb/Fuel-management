@@ -6,6 +6,10 @@ import { logger } from './utils/logger';
 async function start(): Promise<void> {
   await connectDB();
 
+  if (env.NODE_ENV === 'production' && env.CORS_ORIGIN.trim() === '*') {
+    logger.warn('CORS_ORIGIN is "*" in production — restrict it to your real origins.');
+  }
+
   const app = createApp();
   const server = app.listen(env.PORT, () => {
     logger.info(`Fuel Management API listening on port ${env.PORT} (mode: ${env.NODE_ENV})`);

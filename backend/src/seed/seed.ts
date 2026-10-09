@@ -69,6 +69,15 @@ const sampleEntries: SampleEntry[] = [
 ];
 
 async function seed(): Promise<void> {
+  // Safety guard: this script DELETES all users, drivers, vehicles and fuel entries.
+  if (env.NODE_ENV === 'production' && process.env.ALLOW_PROD_SEED !== 'true') {
+    logger.error(
+      'Refusing to seed: NODE_ENV=production. Seeding wipes ALL data. ' +
+        'If you really intend this on a throw-away database, set ALLOW_PROD_SEED=true.'
+    );
+    process.exit(1);
+  }
+
   await prisma.$connect();
 
   logger.info('Clearing existing tables (development seed)...');

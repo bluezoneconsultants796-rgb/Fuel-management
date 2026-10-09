@@ -21,7 +21,7 @@ cd backend
 cp .env.example .env        # fill in DATABASE_URL, DIRECT_URL, JWT_SECRET
 npm install                 # also runs `prisma generate`
 npx prisma migrate deploy   # creates the tables
-npm run seed                # optional: demo users, drivers, vehicles, entries
+npm run seed                # DEV ONLY: wipes ALL data, then adds demo data (blocked when NODE_ENV=production)
 npm run dev                 # http://localhost:5000/api/health
 npm test                    # (optional) full API test suite — server must be running
 ```
